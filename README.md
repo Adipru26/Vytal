@@ -1,2 +1,2 @@
-# Vytal
+# Vital
 Vital
