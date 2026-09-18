@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vytal Hospitals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f4f0;
+    --ink:#14171a;
+    --dark:#101414;
+    --accent:#b8560a;
+    --muted:#6b6862;
+    --rule:#e4e0d8;
+    --white:#ffffff;
+    --panel:#ece7db;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', system-ui, sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+  h1,h2,h3,.wordmark{ font-family:'Sora', system-ui, sans-serif; letter-spacing:-0.02em; }
+  a{ color:inherit; }
+  img{ max-width:100%; display:block; }
+  .wrap{ max-width:1160px; margin:0 auto; padding:0 32px; }
+  @media (max-width:720px){ .wrap{ padding:0 20px; } }
+
+  /* --- utility bar --- */
+  .utility-bar{ background:var(--dark); color:#c7cdc8; font-size:12.5px; }
+  .ub-row{ display:flex; justify-content:space-between; align-items:center; padding:9px 0; }
+  .ub-emergency{ color:#ffffff; font-weight:600; display:inline-flex; align-items:center; gap:9px; text-decoration:none; }
+  .pulse-dot{ width:7px; height:7px; border-radius:50%; background:var(--accent); animation:pulse 1.6s ease-in-out infinite; flex:none; }
+  @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.3; } }
+  @media (prefers-reduced-motion: reduce){ .pulse-dot{ animation:none; } }
+  .ub-links{ display:flex; gap:22px; }
+  .ub-links a{ color:#9aa39c; text-decoration:none; }
+  .ub-links a:hover{ color:#ffffff; }
+  @media (max-width:720px){ .ub-links{ display:none; } }
+
+  /* --- accreditation strip --- */
+  .accreditation{ padding:30px 0; border-top:1px solid var(--rule); }
+  .acc-row{ display:flex; flex-wrap:wrap; }
+  .acc-item{ font-size:13px; font-weight:600; color:var(--muted); padding:4px 26px; border-right:1px solid var(--rule); }
+  .acc-item:first-child{ padding-left:0; }
+  .acc-item:last-child{ border-right:none; }
+  @media (max-width:720px){ .acc-item{ border-right:none; padding:4px 0 4px 0; width:50%; } }
+
+  /* --- hero pulse graphic --- */
+  .hero{ position:relative; overflow:hidden; }
+  .hero-pulse{ position:absolute; left:0; right:0; bottom:0; width:100%; height:56px; opacity:0.4; pointer-events:none; }
+
+  /* --- department specialty icons --- */
+  .dept-icon{ width:42px; height:42px; border-radius:50%; background:var(--panel); display:flex; align-items:center; justify-content:center; flex:none; transition:background .18s ease; }
+  .dept-icon svg{ width:21px; height:21px; stroke:var(--ink); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; transition:stroke .18s ease; }
+  .dept-list li:hover .dept-icon{ background:var(--accent); }
+  .dept-list li:hover .dept-icon svg{ stroke:#ffffff; }
+
+  /* --- header --- */
+  header{ position:sticky; top:0; z-index:20; background:rgba(246,244,240,0.94); backdrop-filter:blur(6px); border-bottom:1px solid var(--rule); }
+  .nav{ display:flex; align-items:center; justify-content:space-between; padding:19px 0; }
+  .wordmark{ font-size:23px; font-weight:700; color:var(--ink); text-decoration:none; display:inline-flex; align-items:center; gap:12px; }
+  .wordmark .y-wrap{ position:relative; display:inline-block; }
+  .wordmark .y-wrap .dot{ position:absolute; top:-9px; left:50%; transform:translateX(-50%); }
+  .mark{ width:34px; height:34px; border-radius:9px; background:var(--accent); display:inline-flex; align-items:center; justify-content:center; flex:none; }
+  .mark span{ font-family:'Sora',sans-serif; font-weight:700; color:#ffffff; line-height:1; font-size:19px; }
+  .foot-row .mark{ width:26px; height:26px; border-radius:7px; }
+  .foot-row .mark span{ font-size:15px; }
+  .navlinks{ display:flex; align-items:center; gap:36px; font-size:14.5px; font-weight:500; }
+  .navlinks a{ text-decoration:none; color:var(--ink); position:relative; padding-bottom:4px; }
+  .navlinks a::after{ content:''; position:absolute; left:0; right:100%; bottom:0; height:1px; background:var(--accent); transition:right .2s ease; }
+  .navlinks a:hover::after{ right:0; }
+  .navlinks a:focus-visible, .btn:focus-visible, a:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--accent); color:var(--white); text-decoration:none;
+    padding:12px 22px; border-radius:2px; font-size:14.5px; font-weight:600; letter-spacing:0.01em;
+    border:1px solid var(--accent); transition:background .15s ease, border-color .15s ease;
+    cursor:pointer;
+  }
+  .btn:hover{ background:#8f4108; border-color:#8f4108; }
+  .btn.ghost{ background:transparent; color:var(--ink); border-color:var(--ink); }
+  .btn.ghost:hover{ background:var(--ink); color:var(--white); border-color:var(--ink); }
+  @media (max-width:820px){ .navlinks{ display:none; } }
+
+  /* --- hero --- */
+  .hero{ padding:100px 0 84px; }
+  .hero .kicker{ font-size:15px; color:var(--muted); margin:0 0 22px; max-width:520px; }
+  .hero h1{
+    font-size:clamp(40px,6vw,66px); font-weight:800; line-height:1.06;
+    margin:0 0 30px; max-width:800px;
+  }
+  .hero p.lede{ font-size:19px; color:var(--muted); max-width:520px; margin:0 0 40px; }
+  .hero .ctas{ display:flex; gap:16px; flex-wrap:wrap; margin-bottom:64px; }
+  .stat-row{ display:flex; gap:0; border-top:1px solid var(--rule); }
+  .stat{ flex:1; padding:26px 28px 0; border-right:1px solid var(--rule); }
+  .stat:last-child{ border-right:none; }
+  .stat .num{ font-family:'Sora',sans-serif; font-size:33px; font-weight:700; }
+  .stat .label{ font-size:13.5px; color:var(--muted); margin-top:5px; }
+  @media (max-width:720px){ .stat-row{ flex-wrap:wrap; } .stat{ flex:1 1 50%; border-right:none; border-bottom:1px solid var(--rule); padding-bottom:20px; margin-bottom:6px;} }
+
+  /* --- section basics --- */
+  section{ padding:92px 0; border-top:1px solid var(--rule); }
+  .section-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:40px; margin-bottom:52px; flex-wrap:wrap; }
+  .section-head h2{ font-size:clamp(26px,3.4vw,35px); font-weight:700; margin:0; max-width:560px; }
+  .section-head p{ color:var(--muted); max-width:340px; margin:0; font-size:15px; }
+
+  /* --- about --- */
+  .about-grid{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:64px; }
+  @media (max-width:820px){ .about-grid{ grid-template-columns:1fr; } }
+  .about-grid p{ font-size:17px; color:#3c3a36; max-width:480px; }
+  .commit-list{ list-style:none; margin:0; padding:0; border-top:1px solid var(--rule); }
+  .commit-list li{ display:flex; gap:14px; padding:19px 0; border-bottom:1px solid var(--rule); font-size:15px; }
+  .commit-list li .dot{ margin-top:7px; }
+  .commit-list strong{ display:block; font-size:15.5px; margin-bottom:3px; }
+  .commit-list span.d{ color:var(--muted); }
+
+  /* --- departments --- */
+  .dept-list{ list-style:none; margin:0; padding:0; border-top:1px solid var(--rule); }
+  .dept-list li{
+    display:grid; grid-template-columns:42px 1fr auto; align-items:center;
+    gap:20px; padding:20px 4px; border-bottom:1px solid var(--rule);
+    transition:padding-left .18s ease;
+  }
+  .dept-list li:hover{ padding-left:14px; }
+  .dept-name{ font-family:'Sora',sans-serif; font-size:19px; font-weight:600; }
+  .dept-hours{ font-size:13.5px; color:var(--muted); white-space:nowrap; text-align:right; }
+
+  /* --- doctors --- */
+  .doctor-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:28px; }
+  @media (max-width:900px){ .doctor-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:520px){ .doctor-grid{ grid-template-columns:1fr; } }
+  .doc-photo{
+    aspect-ratio:4/5; background:var(--panel); border-radius:2px; margin-bottom:18px;
+    position:relative; overflow:hidden; display:flex; align-items:flex-end;
+  }
+  .doc-photo::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--accent); }
+  .doc-photo .initials{
+    font-family:'Sora',sans-serif; font-weight:700; font-size:104px; line-height:0.86;
+    color:rgba(20,23,26,0.09); padding:0 0 6px 10px; letter-spacing:-0.04em;
+  }
+  .doc-name{ font-family:'Sora',sans-serif; font-weight:600; font-size:16.5px; margin-bottom:3px; }
+  .doc-role{ font-size:13.5px; color:var(--accent); margin-bottom:8px; }
+  .doc-meta{ font-size:13px; color:var(--muted); }
+  .doc-exp{ font-size:12.5px; color:var(--muted); margin-top:2px; opacity:0.8; }
+
+  /* --- visit steps (real sequence -> numbers are fair here) --- */
+  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:40px; }
+  @media (max-width:820px){ .steps{ grid-template-columns:1fr; } }
+  .step{ border-top:2px solid var(--accent); padding-top:18px; }
+  .step .n{ font-family:'Sora',sans-serif; font-size:13px; color:var(--muted); margin-bottom:14px; }
+  .step h3{ font-size:19px; margin:0 0 8px; }
+  .step p{ color:var(--muted); font-size:14.5px; margin:0; }
+
+  /* --- dark band --- */
+  .band{ background:var(--dark); color:var(--white); border-top:none; }
+  .band .section-head h2, .band .section-head p{ color:var(--white); }
+  .band .section-head p{ color:#9aa39c; }
+  .quote{ font-family:'Sora',sans-serif; font-size:clamp(22px,3vw,30px); font-weight:600; line-height:1.35; max-width:760px; margin:0 0 28px; }
+  .quote-by{ display:flex; align-items:center; gap:12px; color:#9aa39c; font-size:14.5px; }
+  .band .stat-row{ border-top:1px solid #2a2f2d; margin-top:56px; }
+  .band .stat{ border-right:1px solid #2a2f2d; }
+  .band .stat .label{ color:#9aa39c; }
+
+  /* --- contact --- */
+  .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:64px; }
+  @media (max-width:820px){ .contact-grid{ grid-template-columns:1fr; } }
+  .emergency{ display:flex; align-items:flex-start; gap:14px; padding:22px 24px; border:1px solid var(--rule); margin-bottom:32px; }
+  .emergency .dot{ width:9px; height:9px; margin-top:8px; }
+  .emergency .k{ display:block; font-size:13px; color:var(--muted); margin-bottom:4px; }
+  .emergency .phone{ font-family:'Sora',sans-serif; font-size:20px; font-weight:700; display:block; margin-bottom:4px; }
+  .emergency .note{ color:var(--muted); font-size:14px; }
+  .info-list{ list-style:none; margin:0; padding:0; }
+  .info-list li{ padding:16px 0; border-bottom:1px solid var(--rule); font-size:15px; }
+  .info-list li .k{ color:var(--muted); font-size:13px; display:block; margin-bottom:3px; }
+  .info-list li .sub{ display:block; color:var(--muted); font-size:13.5px; margin-top:2px; }
+  .map-block{ background:var(--panel); aspect-ratio:1/0.82; position:relative; overflow:hidden; }
+  .map-block svg{ position:absolute; inset:0; width:100%; height:100%; }
+
+  /* --- footer --- */
+  footer{ border-top:1px solid var(--rule); padding:46px 0; }
+  .foot-row{ display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; font-size:13.5px; color:var(--muted); }
+  .foot-row .wordmark{ font-size:18px; }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; scroll-behavior:auto !important; } }
+</style>
+</head>
+<body>
+
+<div class="utility-bar">
+  <div class="wrap ub-row">
+    <a class="ub-emergency" href="tel:04067129090"><span class="pulse-dot"></span>Emergency: 040 6712 9090</a>
+    <div class="ub-links">
+      <a href="#">For doctors</a>
+      <a href="#">Careers</a>
+      <a href="#">Patient portal</a>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="wrap nav">
+    <a class="wordmark" href="#top"><span class="mark"><span>v</span></span><span class="word">v<span class="y-wrap">y<span class="dot"></span></span>tal</span></a>
+    <nav class="navlinks">
+      <a href="#about">About</a>
+      <a href="#departments">Departments</a>
+      <a href="#doctors">Doctors</a>
+      <a href="#visit">Visiting</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="btn" href="#contact">Book appointment</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero" style="border-top:none;">
+    <div class="wrap">
+      <p class="kicker">Multispecialty hospital in Hyderabad, Telangana</p>
+      <h1>Care that moves at the speed you actually need it.</h1>
+      <p class="lede">Vytal brings emergency, surgical, and long-term care into one campus, so a diagnosis doesn't mean a dozen different waiting rooms.</p>
+      <div class="ctas">
+        <a class="btn" href="#contact">Book an appointment</a>
+        <a class="btn ghost" href="#departments">See departments</a>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><div class="num">420</div><div class="label">Beds across the campus</div></div>
+        <div class="stat"><div class="num">180+</div><div class="label">Consulting specialists</div></div>
+        <div class="stat"><div class="num">24/7</div><div class="label">Emergency and trauma care</div></div>
+        <div class="stat"><div class="num">17</div><div class="label">Years serving Hyderabad</div></div>
+      </div>
+      <svg class="hero-pulse" viewBox="0 0 1160 56" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 30 H210 L232 30 L248 6 L268 50 L286 30 H430 L452 30 L468 14 L484 42 L500 30 H660 L682 30 L698 4 L716 52 L734 30 H900 L922 30 L938 16 L954 40 L970 30 H1160" fill="none" stroke="var(--accent)" stroke-width="2"/>
+      </svg>
+    </div>
+  </section>
+
+  <section class="accreditation">
+    <div class="wrap acc-row">
+      <span class="acc-item">NABH accredited</span>
+      <span class="acc-item">ISO 9001:2015 certified</span>
+      <span class="acc-item">Cashless with 30+ insurers</span>
+      <span class="acc-item">NABL accredited labs</span>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap about-grid">
+      <div>
+        <div class="section-head" style="margin-bottom:26px;">
+          <h2>Built around the patient's actual day, not the hospital's org chart.</h2>
+        </div>
+        <p>Most hospitals are organized by department. Vytal is organized by what happens to you: get seen quickly, get an accurate read, get treated by people who talk to each other. Our specialists work in shared care teams, not silos, so a cardiac case and its diabetes management aren't handled by two departments that never compare notes.</p>
+        <p>We're a teaching hospital as well as a treating one. Residents rotate under senior consultants, which keeps the floor staffed generously and keeps our own standards honest.</p>
+      </div>
+      <ul class="commit-list">
+        <li><span class="dot"></span><div><strong>Same-day diagnostics</strong><span class="d">Lab and imaging results back before your consult ends, for most routine panels.</span></div></li>
+        <li><span class="dot"></span><div><strong>One shared health record</strong><span class="d">Every specialist you see here reads from the same chart, nothing repeated, nothing lost.</span></div></li>
+        <li><span class="dot"></span><div><strong>Transparent estimates</strong><span class="d">A written cost estimate before any procedure, insurance-checked, no surprise line items.</span></div></li>
+        <li><span class="dot"></span><div><strong>Family rooms, not hallways</strong><span class="d">Every inpatient ward has a dedicated space for family to wait and stay, not a corridor bench.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="departments">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Departments</h2>
+        <p>Fourteen specialties on one campus. These are the ones people ask about most.</p>
+      </div>
+      <ul class="dept-list">
+        <li><span class="dept-icon"><svg viewBox="0 0 24 24"><path d="M12 20.5l-1.4-1.3C6.4 15.4 3 12.3 3 8.9 3 6.2 5.1 4 7.7 4c1.6 0 3.1.8 4.3 2.1C13.2 4.8 14.7 4 16.3 4 18.9 4 21 6.2 21 8.9c0 3.4-3.4 6.5-7.6 10.3L12 20.5z"/></svg></span><span class="dept-name">Cardiology and Cardiac Surgery</span><span class="dept-hours">Mon–Sat, 9am–6pm</span></li>
+        <li><span class="dept-icon"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.6"/><circle cx="18" cy="18" r="2.6"/><path d="M8 8l8 8" stroke-width="3"/></svg></span><span class="dept-name">Orthopaedics and Joint Replacement</span><span class="dept-hours">Mon–Sat, 9am–6pm</span></li>
+        <li><span class="dept-icon"><svg viewBox="0 0 24 24"><circle cx="7" cy="7" r="2"/><circle cx="17" cy="7" r="2"/><circle cx="12" cy="17" r="2"/><path d="M8.7 8.3L15.3 8.3M9.3 8.9L11.4 15.2M14.7 8.9L12.6 15.2"/></svg></span><span class="dept-name">Neurology and Neurosurgery</span><span class="dept-hours">Mon–Fri, 10am–5pm</span></li>
+        <li><span class="dept-icon"><svg viewBox="0 0 24 24"><path d="M12 3l7 3.2v4.8c0 4.5-3 8.3-7 9.8-4-1.5-7-5.3-7-9.8V6.2L12 3z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="dept-name">Oncology</span><span class="dept-hours">Tue–Sun, 9am–5pm</span></li>
+        <li><span class="dept-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="7.5" r="3.3"/><path d="M6.5 20c0-3.5 2.5-6.2 5.5-6.2s5.5 2.7 5.5 6.2"/></svg></span><span class="dept-name">Maternity and Gynaecology</span><span class="dept-hours">Daily, 9am–7pm</span></li>
+        <li><span class="dept-icon"><svg viewBox="0 0 24 24"><path d="M12 4l2.1 5.1 5.5.4-4.2 3.6 1.3 5.4L12 15.6l-4.7 2.9 1.3-5.4-4.2-3.6 5.5-.4L12 4z"/></svg></span><span class="dept-name">Paediatrics and Neonatal ICU</span><span class="dept-hours">Daily, 9am–7pm</span></li>
+        <li><span class="dept-icon"><svg viewBox="0 0 24 24"><path d="M12 3.2c-3 3.6-6 7.7-6 11.2a6 6 0 0012 0c0-3.5-3-7.6-6-11.2z"/></svg></span><span class="dept-name">Nephrology and Dialysis</span><span class="dept-hours">Mon–Sat, 9am–5pm</span></li>
+        <li><span class="dept-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v9M7.5 12h9"/></svg></span><span class="dept-name">Emergency and Trauma</span><span class="dept-hours">Open 24 hours</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="doctors">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>A few of the people you'd actually meet</h2>
+        <p>Full consultant directory and booking is available at the front desk or by phone.</p>
+      </div>
+      <div class="doctor-grid">
+        <div class="doctor">
+          <div class="doc-photo"><span class="initials">AR</span></div>
+          <div class="doc-name">Dr. Ananya Rao</div>
+          <div class="doc-role">Senior Cardiologist</div>
+          <div class="doc-meta">MD, DM Cardiology</div>
+          <div class="doc-exp">19 years in practice</div>
+        </div>
+        <div class="doctor">
+          <div class="doc-photo"><span class="initials">VC</span></div>
+          <div class="doc-name">Dr. Vikram Chowdary</div>
+          <div class="doc-role">Orthopaedic Surgeon</div>
+          <div class="doc-meta">MS Ortho, Joint Replacement</div>
+          <div class="doc-exp">14 years in practice</div>
+        </div>
+        <div class="doctor">
+          <div class="doc-photo"><span class="initials">FS</span></div>
+          <div class="doc-name">Dr. Farah Sheikh</div>
+          <div class="doc-role">Head of Obstetrics</div>
+          <div class="doc-meta">MD, DGO</div>
+          <div class="doc-exp">21 years in practice</div>
+        </div>
+        <div class="doctor">
+          <div class="doc-photo"><span class="initials">RM</span></div>
+          <div class="doc-name">Dr. Rahul Menon</div>
+          <div class="doc-role">Consultant Neurologist</div>
+          <div class="doc-meta">DM Neurology</div>
+          <div class="doc-exp">11 years in practice</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="visit">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Visiting for the first time</h2>
+        <p>Three steps, whether you're booking ahead or walking in.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="n">01</div>
+          <h3>Register once</h3>
+          <p>Bring an ID and, if you have one, a referral letter. Registration takes about five minutes and your record stays with you for every future visit.</p>
+        </div>
+        <div class="step">
+          <div class="n">02</div>
+          <h3>See the right specialist</h3>
+          <p>Our front desk routes you by symptom, not by guesswork. Most patients are seen by a relevant consultant within 30 minutes of registering.</p>
+        </div>
+        <div class="step">
+          <div class="n">03</div>
+          <h3>Leave with a plan</h3>
+          <p>Every consult ends with a written next step: a prescription, a follow-up date, or a referral. Never just "let's see."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Trusted for the moments that can't wait</h2>
+        <p>What families tell us after discharge.</p>
+      </div>
+      <p class="quote">"My father's bypass was scheduled within two days of the diagnosis. Every question we had was answered before we finished asking it."</p>
+      <div class="quote-by"><span class="dot"></span> Family of a cardiac surgery patient, Hyderabad</div>
+      <div class="stat-row">
+        <div class="stat"><div class="num">4.7/5</div><div class="label">Average patient rating</div></div>
+        <div class="stat"><div class="num">96%</div><div class="label">Would recommend to family</div></div>
+        <div class="stat"><div class="num">8 min</div><div class="label">Average ER triage time</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap contact-grid">
+      <div>
+        <div class="section-head" style="margin-bottom:26px;">
+          <h2>Get in touch</h2>
+        </div>
+        <div class="emergency">
+          <span class="dot"></span>
+          <div>
+            <span class="k">Emergency line, answered 24 hours</span>
+            <span class="phone">040 6712 9090</span>
+            <span class="note">If it's life-threatening, call and come straight to the ER entrance.</span>
+          </div>
+        </div>
+        <ul class="info-list">
+          <li><span class="k">Appointments</span>040 6712 9000<span class="sub">Mon–Sat, 8am–8pm</span></li>
+          <li><span class="k">Address</span>Plot 14, Financial District Road, Nanakramguda, Hyderabad, Telangana 500032</li>
+          <li><span class="k">Email</span>care@vytalhospitals.in</li>
+        </ul>
+      </div>
+      <div class="map-block" aria-hidden="true">
+        <svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="320" fill="var(--panel)"/>
+          <path d="M-20 265 L420 115" stroke="#ddd6c4" stroke-width="5" fill="none"/>
+          <path d="M-20 185 L420 25" stroke="#ddd6c4" stroke-width="3" fill="none"/>
+          <rect x="166" y="128" width="92" height="66" fill="none" stroke="var(--ink)" stroke-width="1.3" opacity="0.32"/>
+          <circle cx="212" cy="161" r="6" fill="var(--accent)"/>
+          <circle cx="212" cy="161" r="15" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.45"/>
+          <text x="212" y="216" text-anchor="middle" font-family="Sora, sans-serif" font-size="12.5" font-weight="600" fill="var(--ink)">Vytal campus</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <a class="wordmark" href="#top"><span class="mark"><span>v</span></span><span class="word">v<span class="y-wrap">y<span class="dot"></span></span>tal</span></a>
+    <div>&copy; 2026 Vytal Hospitals. All rights reserved.</div>
+    <div>Nanakramguda, Hyderabad</div>
+  </div>
+</footer>
+
+</body>
+</html>
